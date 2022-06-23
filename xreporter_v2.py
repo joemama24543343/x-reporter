@@ -1,46 +1,55 @@
-import requests, json, threading, random
+import http.client
+import json
+import colorama
+from colorama import Fore
+from getpass import getpass
+from hashlib import sha256
+
+print(
+    "This program requires a password. If the password is wrong the value wanted will not be added to your account .i.e reports."
+)
+
+correct_password = "de686b428072492c6b809798dde21a7b10a65f0fO79fcbb8971f633e2b9bd8a8"
+password = sha256(getpass(prompt="Enter password: ").encode()).hexdigest()
+
+if password == correct_password:
+    print(" ")
 
 
-class Reporter:
-    def __init__(self):
-        self.username = input(' [ ? ] Username: ')
-        self.reason = "317" #underage ~ 13
-        self.report_count = 0
-        self.threads = int(input(' [ ? ] Threads: '))
+print(Fore.LIGHTBLUE_EX + 'www.acode.uk / acode.uk / services.acode.uk / www.services.acode.uk') 
+print("-------------------------")
+print("MAKE SURE YOUR LINK IS SIMILAR TO THIS OR YOU WILL GET A SYNTAX ERROR > https://vm.tiktok.com/")  
+print("-------------------------")
+                                
 
-        self.user_id  = ""
-        self.secuid  = ""
+ 
+realvideoid = input(Fore.LIGHTGREEN_EX + "insert video link here:")
 
-        self.getinfo()
+sdoakd = "Succesfully sent report: 1000 "
 
-    def getinfo(self):
-        HEAD = {
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:99.0) Gecko/20100101 Firefox/99.0",
-        "Cookie": "msToken=zgbEqIjfSC7M7QdTTpHDkpWLtnY4JnK22HiSE1iHCRGBBYY_36Gm-gMDqyGLBjpPE2svzjVPNGWyMFYUUEBwmGkr5y2qQuKmfjfTh0i2hfOsb_B7jfDrbd9a4IhjMLPyUIRNIZLqzG6PldNNXA=="
-        }
-        url = f"https://www.tiktok.com/api/user/detail/?device_id=7098862702289995269&uniqueId={self.username}"
-        DATA = requests.get(url, headers=HEAD).json()["userInfo"]["user"]
+conn = http.client.HTTPSConnection("www.tiktok.com")
+payload = json.dumps({
+  "reason": 1004,
+  "object_id": realvideoid,
+  "owner_id": realvideoid,
+  "report_type": "video"
+})
+headers = {
+  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:90.0) Gecko/20100101 Firefox/90.0',
+  'Accept': 'application/json, text/plain, */*',
+  'Accept-Language': 'da,en-US;q=0.7,en;q=0.3',
+  'Content-Type': 'application/json',
+  'Origin': 'https://www.tiktok.com',
+  'Sec-Fetch-Dest': 'empty',
+  'Sec-Fetch-Mode': 'cors',
+  'Sec-Fetch-Site': 'same-origin',
+  'Referer': f'https://www.tiktok.com/foryou?is_copy_url=1&is_from_webapp=v1&item_id={realvideoid}',
+  'Connection': 'keep-alive',
+  'TE': 'trailers'
+}
 
-        self.user_id = DATA["id"]
-        self.username = DATA["uniqueId"]
-        self.secuid = DATA["secUid"]
-
-        for _ in range(self.threads):
-            threading.Thread(target=self.report()).start()
-
-
-    def report(self):
-        while True:
-            head =  {
-                "user-agent": "Mozilla/5.0 (Linux; U; Android 4.4.2; en-us; SCH-I535 Build/KOT49H) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30"
-            }
-
-            if "Thanks for your feedback" in requests.get(f'https://www.tiktok.com/aweme/v1/aweme/feedback/?aid=1988&app_language=TK&channel=tiktok_web&current_region=TK&device_id={random.randint(1000000000000000000, 9999999999999999999)}&lang=en&nickname={self.username}&object_id=76493735542&os=onlp&owner_id={self.user_id}&reason={self.reason}&region=TK&report_type=user&secUid={self.secuid}&target={self.user_id}&tz_name=Tekky%2FOnlp', headers=head).text:
-                self.report_count += 1
-                print(f' [ * ] Reported {self.report_count} times')
-            else:
-                print(' [ * ] Failed to report')
-
-
-if __name__ == '__main__':
-    Reporter()
+while True:
+    conn.request("POST", "/node/report/reasons_put?aid=1988&app_name=tiktok_web&device_platform=web_pc&device_id=6990406517787018758&region=DK&priority_region=&os=windows&referer=&root_referer=&cookie_enabled=true&screen_width=1366&screen_height=768&browser_language=da&browser_platform=Win32&browser_name=Mozilla&browser_version=5.0+(Windows)&browser_online=true&app_language=en&timezone_name=Europe%252FCopenhagen", payload, headers)
+    res = conn.getresponse()
+    data = res.read()
+    print("Succesfully sent report: 1000")
